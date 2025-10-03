@@ -10,13 +10,23 @@ import Foundation
 class WeatherViewModel: ObservableObject {
     
     @Published var weatherData: WeatherResponse?
-    
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
+    var repository: WeatherRepository
+
     init() {
-        self.weatherData = WeatherResponse(weather: WeatherDetailsDescription(description: "Rainy", icon: "10d"), main: WeatherMainData(temp: 315, humidity: 80), wind: WeatherWindDetails(speed: 32))
+        repository = WeatherRepository()
+//        self.weatherData = WeatherResponse(weather: WeatherDetailsDescription(description: "Rainy", icon: "10d"), main: WeatherMainData(temp: 315, humidity: 80), wind: WeatherWindDetails(speed: 32))
     }
     
-    func fetchWeather(for city: String) {
-        
+    func fetchWeather(for city: String) async {
+        isLoading = true
+        do {
+            weatherData = try await repository.fetchWeather(for: city)
+            isLoading = false
+        } catch let error {
+            errorMessage = error.localizedDescription
+            isLoading = false
+        }
     }
-        
 }
