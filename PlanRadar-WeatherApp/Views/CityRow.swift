@@ -14,7 +14,7 @@ struct CityRow: View {
     var body: some View {
         NavigationLink(destination: CityWeatherView(city: city)) {
             HStack {
-                Text(city.name)
+                Text(city.name ?? "")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.black)
                 

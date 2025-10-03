@@ -10,60 +10,57 @@ import CoreData
 
 struct ContentView: View {
     @State private var cities: [City] = [
-        City(name: "London"),
-        City(name: "Paris"),
-        City(name: "Vienna")
+//        City(name: "London"),
+//        City(name: "Paris"),
+//        City(name: "Vienna")
     ]
     
     @State private var showingAddCity = false
     @State private var newCityName = ""
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [Color.white, Color(.systemGray4)]),
-                               startPoint: .top,
-                               endPoint: .bottom)
-                .ignoresSafeArea()
-                
-                VStack {
-                    Spacer()
-                    Image("Background")
-                        .resizable()
-                        .scaledToFit()
-                        .ignoresSafeArea(edges: .bottom)
-                }
-                .ignoresSafeArea()
-                
-                List {
-                    ForEach(cities) { city in
-                        CityRow(city: city)
-                    }
-                    .onDelete(perform: deleteCity)
-                }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
-                .listSectionSeparator(.hidden)
-                
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.white, Color(.systemGray4)]),
+                           startPoint: .top,
+                           endPoint: .bottom)
+            .ignoresSafeArea()
+
+            VStack {
+                Spacer()
+                Image("Background")
+                    .resizable()
+                    .scaledToFit()
+                    .ignoresSafeArea(edges: .bottom)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("CITIES")
-                        .font(.headline)
-                        .tracking(2)
+            .ignoresSafeArea()
+
+            List {
+                ForEach(cities) { city in
+                    CityRow(city: city)
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+                .onDelete(perform: deleteCity)
+            }
+            .scrollContentBackground(.hidden)
+            .listStyle(.plain)
+            .listSectionSeparator(.hidden)
+
+            VStack {
+                HStack {
+                    Spacer()
                     Button(action: { showingAddCity = true }) {
                         Image("Button_right")
                             .resizable()
                             .scaledToFit()
-                        //                                .frame(width: 44, height: 32)
                     }
+                    .padding(.trailing, -10)
+                    .padding(.top, 10)
+                    .frame(width: 100, height: 100)
                 }
+                Spacer()
             }
-            .sheet(isPresented: $showingAddCity) {
+
+        }
+        .sheet(isPresented: $showingAddCity) {
                 VStack(spacing: 20) {
                     Text("Add New City")
                         .font(.headline)
@@ -83,7 +80,7 @@ struct ContentView: View {
 
                         Button("Save") {
                             if !newCityName.isEmpty {
-                                cities.append(City(name: newCityName))
+//                                cities.append(City(name: newCityName))
                                 newCityName = ""
                                 showingAddCity = false
                             }
@@ -93,12 +90,12 @@ struct ContentView: View {
                     .padding(.horizontal)
                 }
                 .padding()
-                .frame(maxWidth: 300) // 👈 limits width
-                .presentationDetents([.medium]) // 👈 makes it appear like a centered card
+                .frame(maxWidth: 300)
+                .presentationDetents([.medium])
                 .presentationDragIndicator(.hidden)
             }
         }
-    }
+    
     
     private func deleteCity(at offsets: IndexSet) {
         cities.remove(atOffsets: offsets)

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-
-struct City: Identifiable {
-    let id = UUID()
-    var name: String
-}
+//
+//struct City: Identifiable {
+//    let id = UUID()
+//    var name: String
+//}

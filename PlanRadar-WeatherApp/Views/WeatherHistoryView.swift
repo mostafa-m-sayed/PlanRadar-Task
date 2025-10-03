@@ -12,12 +12,12 @@ struct WeatherHistoryView: View {
     
     var body: some View {
         VStack {
-            Text("Details about \(city.name)")
+            Text("Details about \(city.name ?? "")")
                 .font(.title)
                 .padding()
             Spacer()
         }
-        .navigationTitle(city.name)
+        .navigationTitle(city.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

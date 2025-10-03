@@ -54,7 +54,7 @@ struct CityWeatherView: View {
                     
                     Spacer()
                     
-                    Text(city.name.uppercased())
+                    Text(city.name?.uppercased() ?? "")
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
                         .tracking(2)
@@ -92,7 +92,7 @@ struct CityWeatherView: View {
                 Spacer()
                 
                 VStack(spacing: 4) { // Footer view
-                    Text("WEATHER INFORMATION FOR \(city.name.uppercased()) RECEIVED ON")
+                    Text("WEATHER INFORMATION FOR \(city.name?.uppercased() ?? "") RECEIVED ON")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4))
                         .tracking(0.5)
