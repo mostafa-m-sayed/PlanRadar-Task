@@ -53,7 +53,7 @@ struct WeatherHistoryView: View {
                     Spacer()
                     
                     VStack(spacing: 2) {
-                        Text(city.name.uppercased())
+                        Text(city.name?.uppercased() ?? "")
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
                             .tracking(2)
