@@ -131,7 +131,7 @@ struct ContentView: View {
 
                             Button("Save") {
                                 if !newCityName.isEmpty {
-    //                                cities.append(City(name: newCityName))
+                                    addCity(name: newCityName)
                                     newCityName = ""
                                     showingAddCity = false
                                 }
@@ -150,7 +150,25 @@ struct ContentView: View {
     
     
     private func deleteCity(at offsets: IndexSet) {
+        offsets.forEach { index in
+            let city = cities[index]
+            CoreDataManager.shared.deleteCity(city)
+        }
         cities.remove(atOffsets: offsets)
+    }
+
+    private func addCity(name: String) {
+        let weatherService = WeatherService.shared
+        weatherService.addCity(name: name) { result in
+            switch result {
+            case .success:
+                // Reload cities from CoreData
+                cities = CoreDataManager.shared.fetchAllCities()
+            case .failure(let error):
+                print("Error adding city: \(error.localizedDescription)")
+                // TODO: Show error alert to user
+            }
+        }
     }
 
     private func loadDummyCities() {
