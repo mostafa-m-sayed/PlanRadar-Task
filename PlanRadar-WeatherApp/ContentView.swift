@@ -9,77 +9,101 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    @State private var cities: [City] = [
+        City(name: "London"),
+        City(name: "Paris"),
+        City(name: "Vienna")
+    ]
+    
+    @State private var showingAddCity = false
+    @State private var newCityName = ""
+    
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Color.white, Color(.systemGray4)]),
+                               startPoint: .top,
+                               endPoint: .bottom)
+                .ignoresSafeArea()
+                
+                VStack {
+                    Spacer()
+                    Image("Background")
+                        .resizable()
+                        .scaledToFit()
+                        .ignoresSafeArea(edges: .bottom)
                 }
-                .onDelete(perform: deleteItems)
+                .ignoresSafeArea()
+                
+                List {
+                    ForEach(cities) { city in
+                        CityRow(city: city)
+                    }
+                    .onDelete(perform: deleteCity)
+                }
+                .scrollContentBackground(.hidden)
+                .listStyle(.plain)
+                .listSectionSeparator(.hidden)
+                
             }
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                ToolbarItem(placement: .principal) {
+                    Text("CITIES")
+                        .font(.headline)
+                        .tracking(2)
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showingAddCity = true }) {
+                        Image("Button_right")
+                            .resizable()
+                            .scaledToFit()
+                        //                                .frame(width: 44, height: 32)
                     }
                 }
             }
-            Text("Select an item")
-        }
-    }
+            .sheet(isPresented: $showingAddCity) {
+                VStack(spacing: 20) {
+                    Text("Add New City")
+                        .font(.headline)
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+                    TextField("City name", text: $newCityName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    HStack {
+                        Button("Cancel") {
+                            showingAddCity = false
+                            newCityName = ""
+                        }
+                        .foregroundColor(.red)
+
+                        Spacer()
+
+                        Button("Save") {
+                            if !newCityName.isEmpty {
+                                cities.append(City(name: newCityName))
+                                newCityName = ""
+                                showingAddCity = false
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .padding(.horizontal)
+                }
+                .padding()
+                .frame(maxWidth: 300) // 👈 limits width
+                .presentationDetents([.medium]) // 👈 makes it appear like a centered card
+                .presentationDragIndicator(.hidden)
             }
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+    
+    private func deleteCity(at offsets: IndexSet) {
+        cities.remove(atOffsets: offsets)
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 #Preview {
     ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
