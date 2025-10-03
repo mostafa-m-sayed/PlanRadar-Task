@@ -15,7 +15,7 @@ struct ContentView: View {
     @State private var showingAddCity = false
     @State private var newCityName = ""
     var isPreview: Bool = false
-
+    var viewModel = WeatherViewModel()
     var body: some View {
         NavigationView {
             
@@ -158,17 +158,8 @@ struct ContentView: View {
     }
 
     private func addCity(name: String) {
-        let weatherService = WeatherService.shared
-        weatherService.addCity(name: name) { result in
-            switch result {
-            case .success:
-                // Reload cities from CoreData
-                cities = CoreDataManager.shared.fetchAllCities()
-            case .failure(let error):
-                print("Error adding city: \(error.localizedDescription)")
-                // TODO: Show error alert to user
-            }
-        }
+        viewModel.saveCity(name: name)
+        cities = CoreDataManager.shared.fetchAllCities()
     }
 
     private func loadDummyCities() {

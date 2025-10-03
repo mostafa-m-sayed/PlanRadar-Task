@@ -126,6 +126,11 @@ class CoreDataManager {
 
         saveContext()
     }
+    func saveCity(name: String) {
+        let cityInfo = City(context: context)
+        cityInfo.name = name
+        saveContext()
+    }
 
     func fetchWeatherHistory(for city: City) -> [WeatherInfo] {
         guard let weatherHistory = city.weatherHistory as? Set<WeatherInfo> else {

@@ -29,4 +29,8 @@ class WeatherViewModel: ObservableObject {
             isLoading = false
         }
     }
+    
+    func saveCity(name: String) {
+        CoreDataManager.shared.saveCity(name: name)
+    }
 }
