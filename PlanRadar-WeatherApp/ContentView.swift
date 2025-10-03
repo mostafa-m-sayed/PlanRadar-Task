@@ -33,6 +33,7 @@ struct ContentView: View {
                     Text("+")
                 }
                 .ignoresSafeArea()
+                
 
                 List {
                     ForEach(cities) { city in
@@ -53,19 +54,21 @@ struct ContentView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Button(action: { showingAddCity = true }) {
+                        Button(action: { showingAddCity.toggle() }) {
                             Image("Button_right")
                                 .resizable()
                                 .scaledToFit()
                         }
                         .padding(.trailing, -40)
     //                    .padding(.top, 10)
-                        .padding(.top, 0)
+//                        .padding(.top, 0)
                         .frame(width: 150, height: 150)
                     }
                     Spacer()
                 }
                 .padding(.top, -80)
+                .allowsHitTesting(true)
+                .zIndex(1)
 //                .position(x: -50,y: 50)
 
             }
