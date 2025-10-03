@@ -18,63 +18,91 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
+            
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [Color.white, Color(.systemGray4)]),
                                startPoint: .top,
                                endPoint: .bottom)
                 .ignoresSafeArea()
-
-                VStack {
-                    Spacer()
-                    Image("Background")
-                        .resizable()
-                        .scaledToFit()
-                        .ignoresSafeArea(edges: .bottom)
-                    Text("+")
-                }
-                .ignoresSafeArea()
                 
-
-                List {
-                    ForEach(cities) { city in
-                        CityRow(city: city)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
+                
+                    VStack {
+                        Spacer()
+                        Image("Background")
+                            .resizable()
+                            .scaledToFit()
+                            .ignoresSafeArea(edges: .bottom)
+                        //                    Text("+")
                     }
-                    .onDelete(perform: deleteCity)
-                }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
-                .listSectionSeparator(.hidden)
-                .listRowInsets(EdgeInsets())
-                .onAppear {
-                    loadDummyCities()
-                }
-
+                    //                .ignoresSafeArea()
+                    
                 VStack {
                     HStack {
+                        //                    HStack {
+                        //                        Spacer()
                         Spacer()
-                        Button(action: { showingAddCity.toggle() }) {
-                            Image("Button_right")
-                                .resizable()
-                                .scaledToFit()
-                        }
-                        .padding(.trailing, -40)
-    //                    .padding(.top, 10)
-//                        .padding(.top, 0)
-                        .frame(width: 150, height: 150)
+                            Text("CITIES")
+                            .font(.headline)
+                                .padding(.top, 20)
+                        
+                        Spacer()
                     }
-                    Spacer()
+                    
+                    .overlay(
+                        HStack {
+                            Spacer()
+                            Button(action: { showingAddCity.toggle() }) {
+                                ZStack {
+                                    Color.blue
+//                                    Image("Button_right")
+//                                        .resizable()
+//                                        .scaledToFit()
+                                    Text("+")
+                                        .fontWeight(.light)
+                                        .font(.system(size: 50))
+                                        .foregroundColor(.white)
+                                        .padding(.trailing, 20)
+                                }
+                                
+                            }
+                            .frame(width: 110, height: 60)
+                            .cornerRadius(20)
+                            .padding(.trailing, -20)
+                            .padding(.top, 20)
+                            .shadow(radius: 10)
+                        }
+                    )
+                    .padding(.bottom, 20)
+//                    .padding(.top, -80)
+//                    .padding(.trailing, -250)
+//                    .position(x: 0, y: 0)
+//                    .allowsHitTesting(true)
+//                    .zIndex(10)
+//                    .position(x: UIScreen.main.bounds.width - 85,y: 10)
+                    
+                    
+                    List {
+                        ForEach(cities) { city in
+                            CityRow(city: city)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .onDelete(perform: deleteCity)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
+                    .listSectionSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                    .onAppear {
+                        loadDummyCities()
+                    }
+                    //                .padding(.top, 50)
+                    
                 }
-                .padding(.top, -80)
-                .allowsHitTesting(true)
-                .zIndex(1)
-//                .position(x: -50,y: 50)
-
             }
-            .navigationTitle("CITIES")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.hidden, for: .navigationBar)
+//            .navigationTitle("CITIES")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .toolbarBackground(.hidden, for: .navigationBar)
             .onAppear {
                 let appearance = UINavigationBarAppearance()
                 appearance.configureWithTransparentBackground()
