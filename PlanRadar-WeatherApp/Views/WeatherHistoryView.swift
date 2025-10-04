@@ -10,12 +10,7 @@ import SwiftUI
 struct WeatherHistoryView: View {
     let city: City
     @Environment(\.dismiss) var dismiss
-    
-    @State private var weatherHistory: [WeatherResponse] = [
-        WeatherResponse(weather: WeatherDetailsDescription(description: "Hot", icon: "10d"), main: WeatherMainData(temp: 299, humidity: 7), wind: WeatherWindDetails(speed: 22)),
-        WeatherResponse(weather: WeatherDetailsDescription(description: "Rainy", icon: "10d"), main: WeatherMainData(temp: 315, humidity: 18), wind: WeatherWindDetails(speed: 3.5)),
-        WeatherResponse(weather: WeatherDetailsDescription(description: "Cloudy", icon: "10d"), main: WeatherMainData(temp: 330, humidity: 80), wind: WeatherWindDetails(speed: 6))
-    ]
+    @StateObject private var viewModel = WeatherViewModel()
     
     var body: some View {
         ZStack {
@@ -71,8 +66,8 @@ struct WeatherHistoryView: View {
                 .padding(.bottom, 30)
                 
                 List {
-                    ForEach(Array(weatherHistory.enumerated()), id: \.offset) { _, weather in
-                        HistoricalWeatherRow(weather: weather)
+                    ForEach(viewModel.weatherHistory, id: \.objectID) { weatherInfo in
+                        HistoricalWeatherRow(weatherInfo: weatherInfo)
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -85,10 +80,7 @@ struct WeatherHistoryView: View {
         }
         .navigationBarHidden(true)
         .task {
-            let history = CoreDataManager.shared.fetchWeatherHistory(for: city)
-            if !history.isEmpty {
-              weatherHistory = history as! [WeatherResponse]
-            }
+            viewModel.loadWeatherHistory(for: city)
         }
     }
 }

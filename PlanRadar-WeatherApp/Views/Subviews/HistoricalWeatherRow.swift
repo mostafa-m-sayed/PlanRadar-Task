@@ -6,16 +6,29 @@
 //
 
 import SwiftUI
+
 struct HistoricalWeatherRow: View {
-    let weather: WeatherResponse
-    
+    let weatherInfo: WeatherInfo
+
+    private var formattedDate: String {
+        guard let date = weatherInfo.requestDate else { return "N/A" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+
+    private var temperatureString: String {
+        String(format: "%.1f°C", weatherInfo.temperature)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("5/8/1992")
+            Text(formattedDate)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
-            
-            Text("\(weather.weather.description), \(weather.main.temperatureString)")
+
+            Text("\(weatherInfo.weatherDescription ?? "N/A"), \(temperatureString)")
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundColor(Color(red: 0.25, green: 0.55, blue: 0.75))
         }

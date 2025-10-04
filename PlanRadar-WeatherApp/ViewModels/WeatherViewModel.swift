@@ -14,6 +14,7 @@ final class WeatherViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     @Published var cities: [City] = []
+    @Published var weatherHistory: [WeatherInfo] = []
     var repository: WeatherRepository
 
     init() {
@@ -54,6 +55,10 @@ final class WeatherViewModel: ObservableObject {
             CoreDataManager.shared.deleteCity(city)
         }
         cities.remove(atOffsets: offsets)
+    }
+
+    func loadWeatherHistory(for city: City) {
+        weatherHistory = CoreDataManager.shared.fetchWeatherHistory(for: city)
     }
 
     #if DEBUG
