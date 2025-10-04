@@ -87,7 +87,7 @@ struct WeatherHistoryView: View {
         .task {
             let history = CoreDataManager.shared.fetchWeatherHistory(for: city)
             if !history.isEmpty {
-                weatherHistory = history
+              weatherHistory = history as! [WeatherResponse]
             }
         }
     }
