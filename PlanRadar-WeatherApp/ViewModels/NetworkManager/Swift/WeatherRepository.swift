@@ -7,10 +7,10 @@
 
 import Foundation
 
-class WeatherRepository {
-    let baseUrl = "https://api.openweathermap.org/data/2.5/weather"
-    let apiKey = "f5cb0b965ea1564c50c6f1b74534d823"
-    let urlSession = URLSession.shared
+final class WeatherRepository {
+    private let baseUrl = "https://api.openweathermap.org/data/2.5/weather"
+    private let apiKey = "f5cb0b965ea1564c50c6f1b74534d823"
+    private let urlSession = URLSession.shared
     
     func fetchWeather(for city: String) async throws -> WeatherResponse {
         guard !city.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {

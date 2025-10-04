@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-class WeatherViewModel: ObservableObject {
+final class WeatherViewModel: ObservableObject {
     
     @Published var weatherData: WeatherResponse?
     @Published var errorMessage: String?
@@ -23,6 +23,7 @@ class WeatherViewModel: ObservableObject {
         isLoading = true
         do {
             weatherData = try await repository.fetchWeather(for: city)
+            
             isLoading = false
         } catch let error {
             errorMessage = error.localizedDescription

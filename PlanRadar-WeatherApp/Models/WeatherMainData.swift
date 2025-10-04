@@ -18,7 +18,7 @@ struct WeatherMainData: Codable {
         return String(format: "%.1f ℃", tempCelsius)
     }
     var himidityString: String {
-        return "\(humidity)%"
+        return "\(humidity) %"
     }
     
 }

@@ -84,6 +84,12 @@ struct WeatherHistoryView: View {
             }
         }
         .navigationBarHidden(true)
+        .task {
+            let history = CoreDataManager.shared.fetchWeatherHistory(for: city)
+            if !history.isEmpty {
+                weatherHistory = history
+            }
+        }
     }
 }
 

@@ -1,4 +1,3 @@
-//
 //  CityWeatherView.swift
 //  PlanRadar-WeatherApp
 //
@@ -11,6 +10,7 @@ struct CityWeatherView: View {
     let city: City
     @ObservedObject var viewModel = WeatherViewModel()
     @Environment(\.dismiss) var dismiss
+    @State private var showError = false
     
     var body: some View {
         ZStack {
@@ -30,8 +30,8 @@ struct CityWeatherView: View {
             }
             .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                HStack { // Title view
+            VStack(spacing: 0) { // Title view
+                HStack {
                     Button(action: {
                         dismiss()
                     }) {
@@ -104,8 +104,30 @@ struct CityWeatherView: View {
                 }
                 .padding(.bottom, 40)
             }
+            
+            if viewModel.isLoading {
+                Color.black.opacity(0.25)
+                    .ignoresSafeArea()
+                ProgressView()
+                    .tint(Color(red: 0.25, green: 0.55, blue: 0.75))
+                    .scaleEffect(1.2)
+            }
         }
         .navigationBarHidden(true)
+        .task {
+            guard let cityName = city.name else { return }
+            await viewModel.fetchWeather(for: cityName)
+            let dictionary = viewModel.weatherData?.toDictionary() ?? [:]
+            CoreDataManager.shared.saveWeatherInfo(for: city, weatherData: dictionary)
+        }
+        .onChange(of: viewModel.errorMessage) { newValue in
+            showError = newValue != nil
+        }
+        .alert("Error", isPresented: $showError) {
+            Button("OK") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "Something went wrong")
+        }
     }
 }
 
