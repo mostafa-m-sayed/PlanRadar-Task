@@ -1,9 +1,3 @@
-//  CityWeatherView.swift
-//  PlanRadar-WeatherApp
-//
-//  Created by Mostafa Sayed on 03/10/2025.
-//
-
 import SwiftUI
 import CoreData
 
@@ -59,7 +53,7 @@ struct CityWeatherView: View {
             Color.black.opacity(0.25)
                 .ignoresSafeArea()
             ProgressView()
-                .tint(Color(red: 0.25, green: 0.55, blue: 0.75))
+                .tint(Color.appBlue)
                 .scaleEffect(1.2)
         }
     }
@@ -85,8 +79,10 @@ struct CityWeatherView: View {
         .task {
             guard let cityName = city.name else { return }
             await viewModel.fetchWeather(for: cityName)
-            let dictionary = viewModel.weatherData?.toDictionary() ?? [:]
-            CoreDataManager.shared.saveWeatherInfo(for: city, weatherData: dictionary)
+            if viewModel.saveToCoreData {
+                let dictionary = viewModel.weatherData?.toDictionary() ?? [:]
+                CoreDataManager.shared.saveWeatherInfo(for: city, weatherData: dictionary)
+            }
         }
         .onChange(of: viewModel.errorMessage) { newValue in
             showError = newValue != nil
@@ -99,28 +95,7 @@ struct CityWeatherView: View {
     }
 }
 
-struct WeatherRow: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        HStack {
-            Text(label)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
-                .tracking(1)
-
-            Spacer()
-
-            Text(value)
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundColor(Color(red: 0.25, green: 0.55, blue: 0.75))
-        }
-    }
-}
-
 #Preview {
-    // Use the shared CoreDataManager context for preview
     let coreDataManager = CoreDataManager.shared
     let city = coreDataManager.fetchOrCreateCity(name: "London", cityId: 2643743)
     coreDataManager.saveContext()

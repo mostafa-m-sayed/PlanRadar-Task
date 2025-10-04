@@ -1,5 +1,5 @@
 //
-//  WeatherHistoryView.swift
+//  HistoricalWeatherView.swift
 //  PlanRadar-WeatherApp
 //
 //  Created by Mostafa Sayed on 03/10/2025.
@@ -7,41 +7,26 @@
 
 import SwiftUI
 
-struct WeatherHistoryView: View {
+struct HistoricalWeatherView: View {
     let city: City
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = WeatherViewModel()
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [Color.white, Color(.systemGray4)]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-            
-            VStack {
-                Spacer()
-                Image("Background")
-                    .resizable()
-                    .scaledToFit()
-                    .ignoresSafeArea(edges: .bottom)
-            }
-            .ignoresSafeArea()
+            BackgroundView()
 
-            
             VStack(spacing: 0) {
                 
                 HStack {
                     Button(action: {
                         dismiss()
                     }) {
-                        Image(systemName: "arrow.left")
+                        Image(systemName: "xmark")
                             .font(.system(size: 20, weight: .medium))
                             .foregroundColor(.white)
                             .frame(width: 60, height: 60)
-                            .background(Color(red: 0.25, green: 0.55, blue: 0.75))
+                            .background(Color.appBlue)
                             .cornerRadius(12)
                     }
                     

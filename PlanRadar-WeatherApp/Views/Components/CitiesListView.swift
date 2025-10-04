@@ -22,7 +22,7 @@ struct CitiesListView: View {
 }
 
 struct CityRow: View {
-    let city: City   // or you can pass name/country separately
+    let city: City
     @State private var showHistory = false
 
     var body: some View {
@@ -39,14 +39,12 @@ struct CityRow: View {
                     Image(systemName: "info.circle")
                         .foregroundColor(.blue)
                 }
-                .buttonStyle(.plain) // prevents button styling bubble
+                .buttonStyle(.plain)
                 .sheet(isPresented: $showHistory) {
                     NavigationStack {
-                        WeatherHistoryView(city: city)
+                        HistoricalWeatherView(city: city)
                     }
                 }
-//                Image(systemName: "chevron.right")
-//                    .foregroundColor(.blue)
             }
 
             .accentColor(.blue)

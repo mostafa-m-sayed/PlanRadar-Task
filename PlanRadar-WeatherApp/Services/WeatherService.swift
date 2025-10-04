@@ -3,6 +3,7 @@
 //  PlanRadar-WeatherApp
 //
 
+// This is the network manager that uses the Objective-C WeatherNetworkManager
 import Foundation
 
 class WeatherService {
@@ -20,7 +21,7 @@ class WeatherService {
 
     // MARK: - Fetch and Save Weather
 
-    func fetchAndSaveWeather(for cityName: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
+    func fetchAndSaveWeather(for cityName: String, completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
         networkManager.fetchWeather(forCity: cityName) { [weak self] weatherData, error in
             guard let self = self else { return }
 
@@ -45,8 +46,16 @@ class WeatherService {
 
             // Save weather info to CoreData
             self.coreDataManager.saveWeatherInfo(for: city, weatherData: weatherData)
-
-            completion(.success(weatherData as! [String : Any]))
+            
+            // Decode the weather data to return as WeatherResponse
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: weatherData, options: [])
+                let decoder = JSONDecoder()
+                let weatherResponse = try decoder.decode(WeatherResponse.self, from: jsonData)
+                completion(.success(weatherResponse))
+            } catch {
+                completion(.failure(NetworkError.decodingError))
+            }
         }
     }
 

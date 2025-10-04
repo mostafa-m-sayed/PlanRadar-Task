@@ -12,6 +12,4 @@ struct WeatherWindDetails: Codable {
     var speedString: String {
         return String(format: "%.1f km/h", speed)
     }
-    
-    
 }

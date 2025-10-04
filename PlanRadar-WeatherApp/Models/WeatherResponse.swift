@@ -9,17 +9,20 @@ struct WeatherResponse: Codable {
     let weather: WeatherDetailsDescription
     let main: WeatherMainData
     let wind: WeatherWindDetails
+    let name: String
 
     private enum CodingKeys: String, CodingKey {
         case weather
         case main
         case wind
+        case name
     }
 
-    init(weather: WeatherDetailsDescription, main: WeatherMainData, wind: WeatherWindDetails) {
+    init(weather: WeatherDetailsDescription, main: WeatherMainData, wind: WeatherWindDetails, name: String) {
         self.weather = weather
         self.main = main
         self.wind = wind
+        self.name = name
     }
 
     init(from decoder: Decoder) throws {
@@ -32,5 +35,6 @@ struct WeatherResponse: Codable {
 
         self.main = try container.decode(WeatherMainData.self, forKey: .main)
         self.wind = try container.decode(WeatherWindDetails.self, forKey: .wind)
+        self.name = try container.decode(String.self, forKey: .name)
     }
 }

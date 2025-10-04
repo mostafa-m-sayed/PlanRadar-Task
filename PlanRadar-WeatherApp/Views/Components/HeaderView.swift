@@ -46,7 +46,7 @@ private struct ActionButton: View {
     var body: some View {
         Button(action: action) {
             ZStack {
-                Color.blue
+                Color.appBlue
                 Image(systemName: imageName)
                     .fontWeight(.light)
                     

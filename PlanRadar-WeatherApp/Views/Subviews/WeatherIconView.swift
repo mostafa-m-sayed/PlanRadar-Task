@@ -1,9 +1,3 @@
-//
-//  WeatherIconView.swift
-//  PlanRadar-WeatherApp
-//
-//  Created by Mostafa Sayed on 03/10/2025.
-//
 
 import SwiftUI
 
@@ -23,7 +17,7 @@ struct WeatherIconView: View {
                 Image(systemName: "cloud.sun.fill")
                     .resizable()
                     .scaledToFit()
-                    .foregroundColor(Color(red: 0.25, green: 0.55, blue: 0.75))
+                    .foregroundColor(Color.appBlue)
             @unknown default:
                 EmptyView()
             }

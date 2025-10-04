@@ -15,7 +15,6 @@ final class CoreDataManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        // Create in-memory persistent container for testing
         mockPersistentContainer = {
             let container = NSPersistentContainer(name: "PlanRadar_WeatherApp")
             let description = NSPersistentStoreDescription()
@@ -31,7 +30,7 @@ final class CoreDataManagerTests: XCTestCase {
         }()
 
         coreDataManager = CoreDataManager.shared
-        // Override the persistent container with in-memory one
+        
         coreDataManager.persistentContainer = mockPersistentContainer
     }
 

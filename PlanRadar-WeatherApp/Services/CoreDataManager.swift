@@ -92,8 +92,7 @@ class CoreDataManager {
         weatherInfo.requestDate = Date()
         weatherInfo.city = city
 
-        // Extract weather description and icon
-        if let weather = weatherData["weather"] as? [String: Any] {
+        if let weatherList = weatherData["weather"] as? Array<[String: Any]>, let weather = weatherList.first {
             if let description = weather["description"] as? String {
                 weatherInfo.weatherDescription = description
             }
@@ -102,19 +101,16 @@ class CoreDataManager {
             }
         }
 
-        // Extract temperature (convert from Kelvin to Celsius)
         if let main = weatherData["main"] as? [String: Any],
            let tempKelvin = main["temp"] as? Double {
             weatherInfo.temperature = tempKelvin - 273.15
         }
 
-        // Extract humidity
         if let main = weatherData["main"] as? [String: Any],
            let humidity = main["humidity"] as? Int64 {
             weatherInfo.humidity = humidity
         }
 
-        // Extract wind speed
         if let wind = weatherData["wind"] as? [String: Any],
            let speed = wind["speed"] as? Double {
             weatherInfo.windSpeed = speed
@@ -123,7 +119,7 @@ class CoreDataManager {
         saveContext()
     }
     func saveCity(name: String) {
-        // Check if city already exists
+
         if fetchCity(byName: name) != nil {
             return
         }

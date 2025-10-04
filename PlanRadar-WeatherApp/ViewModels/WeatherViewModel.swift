@@ -15,22 +15,43 @@ final class WeatherViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var cities: [City] = []
     @Published var weatherHistory: [WeatherInfo] = []
+    var saveToCoreData: Bool = true
+
     var repository: WeatherRepository
+    var weatherService: WeatherService
 
     init() {
         repository = WeatherRepository()
-//        self.weatherData = WeatherResponse(weather: WeatherDetailsDescription(description: "Rainy", icon: "10d"), main: WeatherMainData(temp: 315, humidity: 80), wind: WeatherWindDetails(speed: 32))
+        weatherService = WeatherService()
     }
     
+    /// Fetch weather data from Swift network manager using the repository
+    /// umcomment to use it
+//    func fetchWeather(for city: String) async {
+//        saveToCoreData = true
+//        isLoading = true
+//        do {
+//            weatherData = try await repository.fetchWeather(for: city)
+//            
+//            isLoading = false
+//        } catch let error {
+//            errorMessage = error.localizedDescription
+//            isLoading = false
+//        }
+//    }
+    /// Fetch weather data from Obj-C network manager using the service
+    
     func fetchWeather(for city: String) async {
+        saveToCoreData = false
         isLoading = true
-        do {
-            weatherData = try await repository.fetchWeather(for: city)
-            
-            isLoading = false
-        } catch let error {
-            errorMessage = error.localizedDescription
-            isLoading = false
+        weatherService.fetchAndSaveWeather(for: city) { [weak self] response in
+            self?.isLoading = false
+            switch response {
+            case .success(let weatherResponse):
+                self?.weatherData = weatherResponse
+            case .failure(let error):
+                self?.errorMessage = error.localizedDescription
+            }
         }
     }
     
