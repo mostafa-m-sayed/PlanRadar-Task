@@ -6,12 +6,14 @@
 //
 import Combine
 import Foundation
+import SwiftUI
 
 final class WeatherViewModel: ObservableObject {
-    
+
     @Published var weatherData: WeatherResponse?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
+    @Published var cities: [City] = []
     var repository: WeatherRepository
 
     init() {
@@ -33,5 +35,46 @@ final class WeatherViewModel: ObservableObject {
     
     func saveCity(name: String) {
         CoreDataManager.shared.saveCity(name: name)
+        cities = CoreDataManager.shared.fetchAllCities()
     }
+
+    func loadCities(isPreview: Bool = false) {
+        if isPreview {
+            #if DEBUG
+            loadDummyCities()
+            #endif
+        } else {
+            cities = CoreDataManager.shared.fetchAllCities()
+        }
+    }
+
+    func deleteCity(at offsets: IndexSet) {
+        offsets.forEach { index in
+            let city = cities[index]
+            CoreDataManager.shared.deleteCity(city)
+        }
+        cities.remove(atOffsets: offsets)
+    }
+
+    #if DEBUG
+    private func loadDummyCities() {
+        guard cities.isEmpty else { return }
+
+        let coreDataManager = CoreDataManager.shared
+        let dummyCityNames = ["London", "Vienna", "Paris"]
+        let dummyCityIds: [Int64] = [2643743, 2761369, 2988507]
+
+        for (index, cityName) in dummyCityNames.enumerated() {
+            if coreDataManager.fetchCity(byName: cityName) == nil {
+                _ = coreDataManager.fetchOrCreateCity(
+                    name: cityName,
+                    cityId: dummyCityIds[index]
+                )
+            }
+        }
+
+        coreDataManager.saveContext()
+        cities = coreDataManager.fetchAllCities()
+    }
+    #endif
 }
