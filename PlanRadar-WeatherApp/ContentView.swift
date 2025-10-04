@@ -26,7 +26,7 @@ struct ContentView: View {
                     HeaderView(onAddTap: {
                         showingAddCity.toggle()
                     })
-                    
+                    .font(.system(size: 40))
                     CitiesListView(
                         cities: viewModel.cities,
                         onDelete: viewModel.deleteCity
